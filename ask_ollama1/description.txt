@@ -1,0 +1,8 @@
+It's a small Node.js/Express web app ("ollama-interface", not Python) — a local chat UI for Ollama:
+- server.js — Express server with GET /api/health (pings ollama.list()), GET / (serves the UI), and POST /api/ask-query (takes {query}, calls ollama.chat({model: 'llama3.2', messages: [...]}) via the official Node ollama npm client, returns {reply})
+- public/index.html — a two-pane textarea-in/response-out UI, with one clickable prompt template already baked in: "translate this and breakdown vocabulary terms" (and a commented-out one for CSV conversion) — interesting, this is clearly an earlier, informal attempt at the same kind of thing language_capabilities now does properly
+- server copy.js — byte-identical duplicate of server.js (just an old backup)
+- askai.txt — a manual backup dump of all three files pasted together; askAI_template.txt is empty
+- package.json — deps are just express + the ollama npm package (v0.4.4); model is hardcoded to llama3.2, no way to override it without editing the file
+
+So it's a genuinely different stack (Node/JS hitting Ollama's native /api/chat via the ollama npm client) from create_paraphrase/script.py (Python hitting Ollama's OpenAI-compatible endpoint via the openai SDK). They can't literally share code, but they can share the same conventions (base URL, default model) instead of each hardcoding its own — which is presumably the "connector" you're after. Two different things that could mean, though:

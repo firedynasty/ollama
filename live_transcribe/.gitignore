@@ -1,0 +1,7 @@
+# Google OAuth credentials -- never commit these
+client_secret.json
+gdoc_token.json
+
+# OS / Python cruft
+.DS_Store
+__pycache__/

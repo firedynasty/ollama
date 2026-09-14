@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ollama Interface</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+            height: 80vh;
+        }
+        .pane {
+            flex: 1;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        #input-pane {
+            display: flex;
+            flex-direction: column;
+        }
+        #prompt-input {
+            flex-grow: 1;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 16px;
+            resize: none;
+        }
+        .template-options {
+            margin-bottom: 20px;
+        }
+        .template-option {
+            cursor: pointer;
+            padding: 8px;
+            margin-bottom: 5px;
+            color: #2c5282;
+            display: flex;
+            align-items: center;
+        }
+        .template-option:before {
+            content: "•";
+            margin-right: 8px;
+            color: #2c5282;
+        }
+        .template-option:hover {
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+        #submit-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #submit-btn:hover {
+            background-color: #45a049;
+        }
+        #response-pane {
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        .loading {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="pane" id="input-pane">
+            <textarea id="prompt-input" placeholder="Enter your prompt here..."></textarea>
+            <div class="template-options">
+                <div class="template-option" onclick="appendTemplate('translate this and breakdown vocabulary terms')">
+                    translate this and breakdown vocabulary terms
+                </div>
+                <!-- <div class="template-option" onclick="appendTemplate('convert this into a csv format with chinese in one column and english in the second column, delimit with commas')">
+                    convert this into a csv format with chinese in one column and english in the second column, delimit with commas
+                </div> -->
+            </div>
+            <button id="submit-btn">Submit</button>
+        </div>
+        <div class="pane" id="response-pane"></div>
+    </div>
+
+    <script>
+        function appendTemplate(template) {
+            const promptInput = document.getElementById('prompt-input');
+            const currentText = promptInput.value.trim();
+            
+            // Add a newline if there's existing text
+            const prefix = currentText ? currentText + '\n\n' : '';
+            promptInput.value = prefix + template;
+            
+            // Focus the textarea and move cursor to the end
+            promptInput.focus();
+            promptInput.setSelectionRange(promptInput.value.length, promptInput.value.length);
+        }
+
+        document.getElementById('submit-btn').addEventListener('click', async () => {
+            const promptInput = document.getElementById('prompt-input');
+            const responsePane = document.getElementById('response-pane');
+            const submitBtn = document.getElementById('submit-btn');
+            const prompt = promptInput.value.trim();
+
+            if (!prompt) return;
+
+            try {
+                // Add loading states
+                submitBtn.classList.add('loading');
+                responsePane.textContent = 'Loading...';
+                
+                const response = await fetch('/api/ask-query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query: prompt }),
+                });
+
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                responsePane.textContent = data.reply;
+            } catch (error) {
+                responsePane.textContent = `Error: ${error.message || 'Failed to get response'}`;
+                console.error('Error:', error);
+            } finally {
+                submitBtn.classList.remove('loading');
+            }
+        });
+
+        // Allow submission with Ctrl+Enter or Cmd+Enter
+        document.getElementById('prompt-input').addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                document.getElementById('submit-btn').click();
+            }
+        });
+    </script>
+</body>
+</html>

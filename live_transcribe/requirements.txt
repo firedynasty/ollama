@@ -1,0 +1,11 @@
+torch>=2.2
+sounddevice>=0.5
+numpy>=1.26
+silero-vad>=5.0
+requests>=2.31
+streamlit>=1.40
+
+# only needed for the Google Doc import feature in streamlit_app.py
+google-auth>=2.30
+google-auth-oauthlib>=1.1
+google-api-python-client>=2.100
