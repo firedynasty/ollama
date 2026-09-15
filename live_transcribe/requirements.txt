@@ -5,7 +5,7 @@ silero-vad>=5.0
 requests>=2.31
 streamlit>=1.40
 
-# only needed for the Google Doc import feature in streamlit_app.py
+# only needed for the Google Doc import feature in streamlit_with_google_docs_nonfiction.py
 google-auth>=2.30
 google-auth-oauthlib>=1.1
 google-api-python-client>=2.100

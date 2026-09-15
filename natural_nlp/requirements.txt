@@ -1,0 +1,8 @@
+streamlit>=1.40
+
+# segmentation, pinyin, dictionary lookups
+jieba>=0.42
+pypinyin>=0.55
+pypinyin-dict>=0.9
+pycccedict>=1.2
+opencc-python-reimplemented>=0.1.7

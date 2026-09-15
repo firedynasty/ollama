@@ -2,13 +2,22 @@
 
 Mic → Silero VAD → whisper.cpp (`whisper-cli`) → Ollama.
 
-Two scripts:
+Scripts:
 - `transcribe_loop.py` — step 1, prints each transcribed chunk as you speak.
   No Ollama. Good for tuning VAD thresholds in isolation.
 - `interview_loop.py` — the full loop: picks a topic from a topics file,
   listens for your spoken answer, and sends it to Ollama once you press Enter.
+- `streamlit_with_google_docs_nonfiction.py` — browser UI for the same
+  "explain it back" loop as `interview_loop.py` (record instead of live mic,
+  can load topics from a Google Doc). Run with `streamlit run
+  streamlit_with_google_docs_nonfiction.py`.
 - `topics.py` — parses a `#heading` notes file (same format as
   `read-nonfiction.html`) into topics you can practice explaining.
+
+(The Chinese text -> CSV tool that used to live here -- `chinese_csv.py` /
+`streamlit_app.py` -- moved to `../natural_nlp/`: unrelated to this mic/Ollama
+loop, no Ollama or mic of its own, so it got its own directory. See
+`natural_nlp/README.md`.)
 
 ## Requirements (already installed on this machine)
 

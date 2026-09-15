@@ -1,5 +1,5 @@
 """
-Google Docs auth + fetch helpers for streamlit_app.py's sidebar -- lets you
+Google Docs auth + fetch helpers for streamlit_with_google_docs_nonfiction.py's sidebar -- lets you
 load topics directly from a Google Doc instead of a local topics/*.txt file.
 
 A loaded doc is parsed with the same '#heading' rules as topics.py (see its

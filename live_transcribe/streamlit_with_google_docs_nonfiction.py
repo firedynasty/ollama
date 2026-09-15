@@ -12,7 +12,7 @@ so you can fix a bad transcription or just type your answer instead, same as
 the typed-answer override in interview_loop.py.
 
 Usage:
-    streamlit run streamlit_app.py
+    streamlit run streamlit_with_google_docs_nonfiction.py
 """
 
 import random

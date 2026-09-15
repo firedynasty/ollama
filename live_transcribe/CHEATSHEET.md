@@ -54,6 +54,11 @@ python3 interview_loop.py topics/internet_addiction.txt --device 2 --shuffle
 python3 interview_loop.py topics/internet_addiction.txt --device 2 --no-clipboard
 ```
 
+(The unrelated Chinese text -> vocab CSV tool that used to be here --
+`chinese_csv.py` / `streamlit_app.py` -- moved to `../natural_nlp/`, its own
+directory since it doesn't touch Ollama or the mic. See
+`natural_nlp/README.md`.)
+
 ## Tuning flags (interview_loop.py & transcribe_loop.py)
 
 | Flag | Default | What it does |

@@ -10,7 +10,7 @@ mic → Silero VAD → whisper.cpp (whisper-cli) → you finish your answer → 
 ```
 
 Two ways to run it: a terminal loop (`interview_loop.py`) or a browser UI
-(`streamlit_app.py`). Both share the same topics format, transcription
+(`streamlit_with_google_docs_nonfiction.py`). Both share the same topics format, transcription
 backend, and Ollama call.
 
 ## What do I need installed? (macOS only — uses `pbcopy`, Core Audio device names)
@@ -22,7 +22,7 @@ backend, and Ollama call.
    - `whisper-cpp` gives you `whisper-cli` + downloads `ggml-base.bin` to
      `/opt/homebrew/opt/whisper-cpp/share/whisper-cpp/ggml-base.bin` — that
      exact path is hardcoded as the default model, so no extra config needed.
-   - `ffmpeg` is only used by `streamlit_app.py`, to convert whatever the
+   - `ffmpeg` is only used by `streamlit_with_google_docs_nonfiction.py`, to convert whatever the
      browser records to 16kHz mono WAV before handing it to whisper-cli.
    - `ollama` runs the model that reacts to your answers.
 
@@ -82,7 +82,7 @@ python3 interview_loop.py topics/internet_addiction.txt --device N
 python3 interview_loop.py topics/internet_addiction.txt --device N --shuffle
 ```
 
-## How is `streamlit_app.py` different?
+## How is `streamlit_with_google_docs_nonfiction.py` different?
 
 Same idea, adapted to a request/response web UI instead of a continuously
 streaming mic:
@@ -99,7 +99,7 @@ streaming mic:
   local file (see below) — same `#heading` parsing either way.
 
 ```bash
-streamlit run streamlit_app.py
+streamlit run streamlit_with_google_docs_nonfiction.py
 ```
 
 ## What's the topics file format?
@@ -127,7 +127,7 @@ to preview how a file gets split into topics before using it live.
 ## Can I use a different Ollama model?
 
 `OLLAMA_MODEL = "qwen3:8b"` is set at the top of `interview_loop.py` (and
-reused by `streamlit_app.py` via `ask_ollama`). To switch, edit that
+reused by `streamlit_with_google_docs_nonfiction.py` via `ask_ollama`). To switch, edit that
 constant and make sure you've pulled the model first (`ollama pull
 <model>`). There's no `--model` CLI flag for the Ollama model currently —
 only `--model` for the *whisper* model path (see below).
@@ -142,13 +142,20 @@ you already have on disk.
 ## Do I need the Google Doc feature?
 
 No — it's optional, only reachable via the "Or load topics from a Google
-Doc" expander in `streamlit_app.py`, and everything else works without it.
+Doc" expander in `streamlit_with_google_docs_nonfiction.py`, and everything else works without it.
 If you want it: create an OAuth client (type **Desktop app**) in [Google
 Cloud Console](https://console.cloud.google.com/), enable the **Drive API**
 and **Docs API**, download it, and save it as `client_secret.json` next to
 `gdoc_picker.py`. That file (and the `gdoc_token.json` it generates after
 you sign in) are both gitignored — never committed, and you'll need your
 own copy.
+
+## Where did `chinese_csv.py` go?
+
+Moved to `../natural_nlp/` — it was never related to this mic/Ollama loop
+(no Ollama, no mic, just local Chinese NLP for a text/PDF -> vocab CSV tool),
+so it got pulled out into its own directory rather than living here. See
+`natural_nlp/README.md`.
 
 ## Troubleshooting
 
@@ -158,7 +165,7 @@ own copy.
 | `whisper-cli not found on PATH` | `brew install whisper-cpp` |
 | `Model not found: /opt/homebrew/...ggml-base.bin` | Re-run/repair `brew install whisper-cpp`, or pass `--model /path/to/your/ggml-*.bin` |
 | Ollama request hangs or `ConnectionError` | Ollama isn't running — start the app or run `ollama serve`; confirm with `ollama list` that `qwen3:8b` is pulled |
-| `streamlit_app.py`: `ffmpeg conversion failed` | `brew install ffmpeg` |
+| `streamlit_with_google_docs_nonfiction.py`: `ffmpeg conversion failed` | `brew install ffmpeg` |
 | "No topics found in that file" | Your `.txt` file has no `#heading` lines — see the format above |
 
 ## Everything runs locally?
